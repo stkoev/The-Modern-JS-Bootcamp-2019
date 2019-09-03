@@ -43,12 +43,6 @@ document.querySelector('#create-note').addEventListener('click', function(e) {
 	console.log(e);
 });
 
-document.querySelector('#remove-all').addEventListener('click', (e) => {
-	document.querySelectorAll('.note').forEach((note) => {
-		note.remove();
-	});
-});
-
 // Search filter Event Listener
 document.querySelector('#search-text').addEventListener('input', (e) => {
 	filters.searchText = e.target.value;
@@ -57,6 +51,13 @@ document.querySelector('#search-text').addEventListener('input', (e) => {
 		newParagraph.textContent = note.title;
 		document.querySelector('body').appendChild(newParagraph);
 	});
+});
+
+// Form selection
+document.getElementById('name-form').addEventListener('submit', function(e) {
+	e.preventDefault(); //prevents form submition
+	console.log(e.target.elements.firstName.value);
+	e.target.elements.firstName.value = '';
 });
 
 // -- Single target

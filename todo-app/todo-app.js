@@ -29,51 +29,63 @@ const todos = [
 	}
 ];
 
-// you have ? todos left
-// Add paragraph for each todo
-const fillTodoList = function(array) {
-	let notCompleted = 0;
-	const divider = '='.repeat(todos.length);
-	const dividerLine = document.createElement('p');
-	dividerLine.textContent = divider;
-	document.querySelector('body').appendChild(dividerLine);
-
-	array.forEach((element) => {
-		const newParagraph = document.createElement('p');
-		newParagraph.textContent = element.title;
-		if (!element.completed) {
-			notCompleted++;
-		}
-		document.querySelector('body').appendChild(newParagraph);
-	});
-	document.querySelector('body').appendChild(dividerLine);
-	const notCompletedInfo = document.createElement('h3');
-	notCompletedInfo.textContent = `You have ${notCompleted} tasks not done.`;
-	document.querySelector('body').appendChild(notCompletedInfo);
+const filters = {
+	searchText: ''
 };
 
-const incompleteTodos = todos.filter((todo) => {
-	return !todo.completed;
-});
-fillTodoList(todos);
+const renderTodos = function(todos, filters) {
+	const filteredTodos = todos.filter((todo) => {
+		return todo.title.toLowerCase().includes(filters.searchText.toLowerCase());
+	});
 
-// Listen for new ToDo creation
-document.querySelector('#add-todo').addEventListener('click', (e) => {
-	e.target.animate(
-		[
-			// keyframes
-			{ transform: 'translateY(0px)' },
-			{ transform: 'translateY(-300px)' }
-		],
-		{
-			// timing options
-			duration: 1000,
-			iterations: 1
-		}
-	);
-});
+	const incompleteTodos = filteredTodos.filter((todo) => {
+		return !todo.completed;
+	});
 
-//Event listener for new todos
-document.querySelector('#new-todo-text').addEventListener('input', (e) => {
+	document.getElementById('todo-container').innerHTML = '';
+
+	const summary = document.createElement('h3');
+	summary.textContent = `You have ${incompleteTodos.length} todos left`;
+	document.getElementById('todo-container').appendChild(summary);
+
+	filteredTodos.forEach((todo) => {
+		const p = document.createElement('p');
+		p.textContent = todo.title;
+		document.getElementById('todo-container').appendChild(p);
+	});
+};
+
+renderTodos(todos, filters);
+
+// Listen for todo filter change
+document.getElementById('search-text').addEventListener('input', (e) => {
 	console.log(e.target.value);
+	filters.searchText = e.target.value;
+	renderTodos(todos, filters);
 });
+
+// Form event listener
+document.getElementById('new-todo').addEventListener('submit', function(e) {
+	e.preventDefault();
+	todos.push({
+		title: e.target.elements.newTodo.value,
+		completed: false
+	});
+	e.target.elements.newTodo.value = '';
+	renderTodos(todos, filters);
+});
+
+// // document.querySelector('#add-todo').addEventListener('click', (e) => {
+// // 	e.target.animate(
+// // 		[
+// // 			// keyframes
+// // 			{ transform: 'translateY(0px)' },
+// // 			{ transform: 'translateY(-300px)' }
+// // 		],
+// // 		{
+// // 			// timing options
+// // 			duration: 1000,
+// // 			iterations: 1
+// // 		}
+// // 	);
+// // });
