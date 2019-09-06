@@ -30,12 +30,15 @@ const todos = [
 ];
 
 const filters = {
-	searchText: ''
+	searchText: '',
+	hideCompleted: false
 };
 
 const renderTodos = function(todos, filters) {
 	const filteredTodos = todos.filter((todo) => {
-		return todo.title.toLowerCase().includes(filters.searchText.toLowerCase());
+		const searchTextMatch = todo.title.toLowerCase().includes(filters.searchText.toLowerCase());
+		const hideComletedMatch = !filters.hideCompleted || !todo.completed;
+		return searchTextMatch && hideComletedMatch;
 	});
 
 	const incompleteTodos = filteredTodos.filter((todo) => {
@@ -72,6 +75,12 @@ document.getElementById('new-todo').addEventListener('submit', function(e) {
 		completed: false
 	});
 	e.target.elements.newTodo.value = '';
+	renderTodos(todos, filters);
+});
+
+// Checkbox event listener
+document.getElementById('hide-completed').addEventListener('change', function(e) {
+	filters.hideCompleted = e.target.checked;
 	renderTodos(todos, filters);
 });
 

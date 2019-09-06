@@ -53,11 +53,10 @@ document.querySelector('#search-text').addEventListener('input', (e) => {
 	});
 });
 
-// Form selection
-document.getElementById('name-form').addEventListener('submit', function(e) {
-	e.preventDefault(); //prevents form submition
-	console.log(e.target.elements.firstName.value);
-	e.target.elements.firstName.value = '';
+// Checkbox event listener
+document.getElementById('for-fun').addEventListener('change', function(e) {
+	const forFun = e.target.checked;
+	console.log(forFun);
 });
 
 // -- Single target
