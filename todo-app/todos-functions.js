@@ -13,6 +13,20 @@ const saveTodos = function(todos) {
 	localStorage.setItem('todos', JSON.stringify(todos));
 };
 
+const removeTodo = function(todoId) {
+	const todoIndex = todos.findIndex((todo) => {
+		return todo.id === todoId;
+	});
+	if (todoIndex > -1) {
+		todos.splice(todoIndex, 1);
+	}
+};
+
+// Toggle Completed on/off
+const toggleTodo = function(todo) {
+	todo.completed = !todo.completed;
+};
+
 // Render application todos based on filters
 const renderTodos = function(todos, filters) {
 	const filteredTodos = todos.filter((todo) => {
@@ -43,7 +57,19 @@ const generateTodoDOM = function(todo) {
 
 	// Setup Checkbox and remove buton
 	checkbox.setAttribute('type', 'checkbox');
+	checkbox.checked = todo.completed;
+	checkbox.addEventListener('click', function() {
+		toggleTodo(todo);
+		saveTodos(todos);
+		renderTodos(todos, filters);
+	});
+
 	removeButton.textContent = 'X';
+	removeButton.addEventListener('click', function() {
+		removeTodo(todo.id);
+		saveTodos(todos);
+		renderTodos(todos, filters);
+	});
 
 	// Add text to span element
 	if (todo.title.length > 0) {
