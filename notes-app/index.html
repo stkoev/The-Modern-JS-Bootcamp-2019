@@ -12,10 +12,16 @@
         <h1>Notes App</h1>
         <h3>Take notes and never forget</h3>
         <input type="text" id="search-text" placeholder="Filter notes">
+        <select name="" id="filter-by">
+            <option value="lastEdited" selected="selected">Sort by last edited</option>
+            <option value="lastCreted">Sort by recently created</option>
+            <option value="alphabetical">Sort alphabetically</option>
+        </select>
         <div id="notes"></div>
         <button id="create-note" type="submit">Create Note</button>
-        <label for="for-fun">Check me for fun</label>
-        <input type="checkbox" name="" id="for-fun">
+
+        <script src='./uuidv4.js'></script>
+        <script src="./notes-functions.js"></script>
         <script src="./notes-app.js"></script>
     </body>
 

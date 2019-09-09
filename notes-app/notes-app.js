@@ -1,62 +1,32 @@
-const notes = [
-	{
-		title: 'My next trip',
-		body: 'I would like to go hiking in the mountains'
-	},
-	{
-		title: 'Habbits to work on',
-		body: 'Excercise, Eat healthy'
-	},
-	{
-		title: 'Wish List',
-		body: 'wishes to become goals'
-	},
-	{
-		title: 'Exercise wish',
-		body: 'something to try'
-	}
-];
+const notes = getSavedNotes();
 
 const filters = {
-	searchText: ''
-};
-
-const renderNotes = function(notes, filters) {
-	const filteredNotes = notes.filter(function(note) {
-		return note.title.toLowerCase().includes(filters.searchText.toLowerCase());
-	});
-
-	//clear the DIV for the filtered notes
-	document.querySelector('#notes').innerHTML = '';
-
-	//add filteed notes
-	filteredNotes.forEach(function(note) {
-		const noteEl = document.createElement('p');
-		noteEl.textContent = note.title;
-		document.querySelector('#notes').appendChild(noteEl);
-	});
+	searchText: '',
+	filterBy: ''
 };
 
 renderNotes(notes, filters);
 
+// Create notes
 document.querySelector('#create-note').addEventListener('click', function(e) {
-	console.log(e);
+	notes.push({
+		id: uuidv4(),
+		title: '',
+		body: ''
+	});
+	saveNotes(notes);
+	renderNotes(notes, filters);
 });
 
 // Search filter Event Listener
 document.querySelector('#search-text').addEventListener('input', (e) => {
 	filters.searchText = e.target.value;
-	renderNotes(notes, filters).forEach((note) => {
-		const newParagraph = document.createElement('p');
-		newParagraph.textContent = note.title;
-		document.querySelector('body').appendChild(newParagraph);
-	});
+	renderNotes(notes, filters);
 });
 
-// Checkbox event listener
-document.getElementById('for-fun').addEventListener('change', function(e) {
-	const forFun = e.target.checked;
-	console.log(forFun);
+// Drop down sort
+document.getElementById('filter-by').addEventListener('change', function(e) {
+	filters.filterBy = e.target.value;
 });
 
 // -- Single target

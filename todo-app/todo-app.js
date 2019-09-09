@@ -1,61 +1,8 @@
-const todos = [
-	{
-		title: 'learn new programming techniques',
-		completed: false
-	},
-	{
-		title: 'drink morning coffee',
-		completed: true
-	},
-	{
-		title: 'study more',
-		completed: true
-	},
-	{
-		title: 'buy FOOD',
-		completed: false
-	},
-	{
-		title: 'have a breakfast',
-		completed: true
-	},
-	{
-		title: 'exercise a bit',
-		completed: true
-	},
-	{
-		title: 'learn even more',
-		completed: false
-	}
-];
+const todos = getSavedTodos();
 
 const filters = {
 	searchText: '',
 	hideCompleted: false
-};
-
-const renderTodos = function(todos, filters) {
-	const filteredTodos = todos.filter((todo) => {
-		const searchTextMatch = todo.title.toLowerCase().includes(filters.searchText.toLowerCase());
-		const hideComletedMatch = !filters.hideCompleted || !todo.completed;
-		return searchTextMatch && hideComletedMatch;
-	});
-
-	const incompleteTodos = filteredTodos.filter((todo) => {
-		return !todo.completed;
-	});
-
-	document.getElementById('todo-container').innerHTML = '';
-
-	const summary = document.createElement('h3');
-	summary.textContent = `You have ${incompleteTodos.length} todos left`;
-	document.getElementById('todo-container').appendChild(summary);
-
-	filteredTodos.forEach((todo) => {
-		const p = document.createElement('p');
-		p.textContent = todo.title;
-		document.getElementById('todo-container').appendChild(p);
-	});
 };
 
 renderTodos(todos, filters);
@@ -71,9 +18,11 @@ document.getElementById('search-text').addEventListener('input', (e) => {
 document.getElementById('new-todo').addEventListener('submit', function(e) {
 	e.preventDefault();
 	todos.push({
+		id: uuidv4(),
 		title: e.target.elements.newTodo.value,
 		completed: false
 	});
+	saveTodos(todos);
 	e.target.elements.newTodo.value = '';
 	renderTodos(todos, filters);
 });
