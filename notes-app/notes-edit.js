@@ -2,6 +2,7 @@ const titleElement = document.getElementById('note-title');
 const bodyElement = document.getElementById('note-body');
 const removeElement = document.getElementById('remove-note');
 const noteId = location.hash.substring(1);
+const dateElement = document.getElementById('last-edited');
 let notes = getSavedNotes();
 
 let note = notes.find(function(note) {
@@ -14,16 +15,22 @@ if (note === undefined) {
 
 titleElement.value = note.title;
 bodyElement.value = note.body;
+dateElement.textContent = generateLastEdited(note.updatedAt);
 
 // Setup input event for title
 titleElement.addEventListener('input', function(e) {
 	note.title = e.target.value;
+	note.updatedAt = moment().valueOf();
+	dateElement.textContent = generateLastEdited(note.updatedAt);
 	saveNotes(notes);
 });
 
 // Setup input event for body
 bodyElement.addEventListener('input', function(e) {
 	note.body = e.target.value;
+	note.updatedAt = moment().valueOf();
+	dateElement.textContent = generateLastEdited(note.updatedAt);
+
 	saveNotes(notes);
 });
 
@@ -49,5 +56,6 @@ window.addEventListener('storage', function(e) {
 
 		titleElement.value = note.title;
 		bodyElement.value = note.body;
+		dateElement.textContent = generateLastEdited(note.updatedAt);
 	}
 });
