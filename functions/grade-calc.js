@@ -1,4 +1,7 @@
 let gradeCalc = function(score = 0, maxScore = 100) {
+	if (typeof score !== 'number' || typeof maxScore !== 'number') {
+		throw Error('Please provide numbers as input!');
+	}
 	let percentage = score / maxScore * 100;
 	let grade = '';
 	if (percentage >= 90) {
@@ -15,5 +18,9 @@ let gradeCalc = function(score = 0, maxScore = 100) {
 	return `${score}/${maxScore} -> you have got a ${grade} (${percentage}%)`;
 };
 
-let studentScore = gradeCalc(89, 100);
-console.log(studentScore);
+try {
+	let studentScore = gradeCalc('89', 100);
+	console.log(studentScore);
+} catch (e) {
+	console.log(e.message);
+}
