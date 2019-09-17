@@ -1,3 +1,5 @@
+'use strict';
+
 let notes = getSavedNotes();
 
 const filters = {
@@ -8,7 +10,7 @@ const filters = {
 renderNotes(notes, filters);
 
 // Create notes
-document.querySelector('#create-note').addEventListener('click', function(e) {
+document.querySelector('#create-note').addEventListener('click', (e) => {
 	const timestamp = moment().valueOf();
 
 	const newNote = {
@@ -31,13 +33,13 @@ document.querySelector('#search-text').addEventListener('input', (e) => {
 });
 
 // Drop down sort
-document.getElementById('filter-by').addEventListener('change', function(e) {
+document.getElementById('filter-by').addEventListener('change', (e) => {
 	filters.sortBy = e.target.value;
 	renderNotes(notes, filters);
 });
 
 // Event listener to the window object
-window.addEventListener('storage', function(e) {
+window.addEventListener('storage', (e) => {
 	if (e.key === 'notes') {
 		notes = JSON.parse(e.newValue);
 		renderNotes(notes, filters);
