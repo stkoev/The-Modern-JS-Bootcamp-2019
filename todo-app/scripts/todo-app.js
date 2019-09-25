@@ -19,14 +19,17 @@ document.getElementById('search-text').addEventListener('input', (e) => {
 // Form event listener
 document.getElementById('new-todo').addEventListener('submit', (e) => {
 	e.preventDefault();
-	todos.push({
-		id: uuidv4(),
-		title: e.target.elements.newTodo.value,
-		completed: false
-	});
-	saveTodos(todos);
-	e.target.elements.newTodo.value = '';
-	renderTodos(todos, filters);
+	const text = e.target.elements.newTodo.value.trim('');
+	if (text.length > 0) {
+		todos.push({
+			id: uuidv4(),
+			title: text,
+			completed: false
+		});
+		saveTodos(todos);
+		e.target.elements.newTodo.value = '';
+		renderTodos(todos, filters);
+	}
 });
 
 // Checkbox event listener

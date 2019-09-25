@@ -40,19 +40,26 @@ const renderTodos = (todos, filters) => {
 	});
 
 	const incompleteTodos = filteredTodos.filter((todo) => !todo.completed);
+	const todoEl = document.getElementById('todo-container');
+	todoEl.innerHTML = '';
+	todoEl.appendChild(generateSummaryDOM(incompleteTodos));
 
-	document.getElementById('todo-container').innerHTML = '';
-
-	document.getElementById('todo-container').appendChild(generateSummaryDOM(incompleteTodos));
-
-	filteredTodos.forEach((todo) => {
-		document.getElementById('todo-container').appendChild(generateTodoDOM(todo));
-	});
+	if (filteredTodos.length > 0) {
+		filteredTodos.forEach((todo) => {
+			todoEl.appendChild(generateTodoDOM(todo));
+		});
+	} else {
+		const messageEl = document.createElement('p');
+		messageEl.classList.add('empty-message');
+		messageEl.textContent = 'No to-does to show!';
+		todoEl.appendChild(messageEl);
+	}
 };
 
 // Get the DOM elements for an individual note
 const generateTodoDOM = (todo) => {
-	const todoEl = document.createElement('div');
+	const todoEl = document.createElement('label');
+	const containerEl = document.createElement('div');
 	const checkbox = document.createElement('input');
 	const todoText = document.createElement('span');
 	const removeButton = document.createElement('button');
@@ -60,36 +67,48 @@ const generateTodoDOM = (todo) => {
 	// Setup Checkbox and remove buton
 	checkbox.setAttribute('type', 'checkbox');
 	checkbox.checked = todo.completed;
+	containerEl.appendChild(checkbox);
 	checkbox.addEventListener('click', () => {
 		toggleTodo(todo.id);
 		saveTodos(todos);
 		renderTodos(todos, filters);
 	});
 
-	removeButton.textContent = 'X';
+	// Setup the todo text
+	if (todo.title.length) {
+		todoText.textContent = todo.title;
+	} else {
+		todoText.textContent = 'Unnamed todo';
+	}
+	containerEl.appendChild(todoText);
+
+	// Setup container
+	todoEl.classList.add('list-item');
+	containerEl.classList.add('list-item__container');
+	todoEl.appendChild(containerEl);
+
+	//Setup the remove button
+	removeButton.textContent = 'remove';
+	removeButton.classList.add('button', 'button--text');
+	todoEl.appendChild(removeButton);
+
 	removeButton.addEventListener('click', () => {
 		removeTodo(todo.id);
 		saveTodos(todos);
 		renderTodos(todos, filters);
 	});
 
-	// Add text to span element
-	if (todo.title.length) {
-		todoText.textContent = todo.title;
-	} else {
-		todoText.textContent = 'Unnamed todo';
-	}
-
-	// Append checkbox, span and button to the div
-	todoEl.appendChild(checkbox);
-	todoEl.appendChild(todoText);
-	todoEl.appendChild(removeButton);
 	return todoEl;
 };
 
 //Get the DOM elements for tlist summary
 const generateSummaryDOM = (incompleteTodos) => {
 	const summary = document.createElement('h3');
-	summary.textContent = `You have ${incompleteTodos.length} todos left`;
+	summary.classList.add('list-title');
+	if (incompleteTodos.length !== 1) {
+		summary.textContent = `You have ${incompleteTodos.length} todos left`;
+	} else {
+		summary.textContent = `You have ${incompleteTodos.length} todo left`;
+	}
 	return summary;
 };
