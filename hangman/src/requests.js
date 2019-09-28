@@ -66,6 +66,8 @@ const getCurrentCountryOld = async () => {
 	});
 };
 
+export { getPuzzle };
+
 // const getCountry = (countryCode) =>
 // 	new Promise((resolve, reject) => {
 // 		const countryRequest = new XMLHttpRequest();

@@ -1,4 +1,8 @@
-// Pimitive value: string, number, boolean, null, undefined
+// import './utilities';
+// import otherSquare, { add, name } from './utilities';
+// import otherScream from './scream';
+import Hangman from './hangman';
+import { getPuzzle } from './requests';
 
 const puzzleEl = document.getElementById('puzzle');
 const guessesEl = document.getElementById('guesses');
@@ -29,26 +33,3 @@ const startGame = async () => {
 document.getElementById('reset').addEventListener('click', startGame);
 
 startGame();
-
-// getCurrentCountry()
-// 	.then((country) => {
-// 		console.log(country.name);
-// 	})
-// 	.catch((err) => {
-// 		console.log('error:', err);
-// 	});
-
-// fetch('http://puzzle.mead.io/puzzle', {})
-// 	.then((response) => {
-// 		if (response.status === 200) {
-// 			return response.json();
-// 		} else {
-// 			throw new Error('Unable to fech puzzle');
-// 		}
-// 	})
-// 	.then((data) => {
-// 		console.log(data.puzzle);
-// 	})
-// 	.catch((err) => {
-// 		console.log(err);
-// 	});
