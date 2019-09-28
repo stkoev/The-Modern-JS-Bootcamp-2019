@@ -1,27 +1,7 @@
 'use strict';
-// Read existing notes from local storage
-const getSavedNotes = () => {
-	const notesJSON = localStorage.getItem('notes');
-
-	try {
-		return notesJSON ? JSON.parse(notesJSON) : [];
-	} catch (e) {
-		return [];
-	}
-};
-
-// Save the notes to localstorage
-const saveNotes = (notes) => {
-	localStorage.setItem('notes', JSON.stringify(notes));
-};
-
-// Remove a note from the list
-const removeNote = (id) => {
-	const noteIndex = notes.findIndex((note) => note.id === id);
-	if (noteIndex > -1) {
-		notes.splice(noteIndex, 1);
-	}
-};
+import moment from 'moment';
+import { getFilters } from './filters';
+import { sortNotes, getNotes } from './notes';
 
 // Generate the DOM structure for a note
 const generateNoteDOM = (note) => {
@@ -50,51 +30,16 @@ const generateNoteDOM = (note) => {
 	return noteEl;
 };
 
-// Sort notes by one of three ways
-const sortNotes = (notes, sortBy) => {
-	if (sortBy === 'byEdited') {
-		return notes.sort((a, b) => {
-			if (a.updatedAt > b.updatedAt) {
-				return -1;
-			} else if (a.updatedAt < b.updatedAt) {
-				return 1;
-			} else {
-				return 0;
-			}
-		});
-	} else if (sortBy === 'byCreated') {
-		return notes.sort((a, b) => {
-			if (a.createdAt > b.createdAt) {
-				return -1;
-			} else if (a.createdAt < b.createdAt) {
-				return 1;
-			} else {
-				return 0;
-			}
-		});
-	} else if (sortBy === 'alphabetical') {
-		return notes.sort((a, b) => {
-			if (a.title.toLowerCase() < b.title.toLowerCase()) {
-				return -1;
-			} else if (a.title.toLowerCase() > b.title.toLowerCase()) {
-				return 1;
-			} else {
-				return 0;
-			}
-		});
-	} else {
-		return notes;
-	}
-};
-
 // Render Application notes
-const renderNotes = (notes, filters) => {
+const renderNotes = () => {
 	const notesEl = document.querySelector('#notes');
-	notes = sortNotes(notes, filters.sortBy);
+
+	const filters = getFilters();
+	const notes = sortNotes(filters.sortBy);
+
 	const filteredNotes = notes.filter((note) => {
 		return note.title.toLowerCase().includes(filters.searchText.toLowerCase());
 	});
-
 	//clear the DIV for the filtered notes
 	notesEl.innerHTML = '';
 
@@ -112,7 +57,26 @@ const renderNotes = (notes, filters) => {
 	}
 };
 
+const initializeEditPage = (noteId) => {
+	const titleElement = document.getElementById('note-title');
+	const bodyElement = document.getElementById('note-body');
+	const dateElement = document.getElementById('last-edited');
+	const notes = getNotes();
+
+	const note = notes.find((note) => note.id === noteId);
+
+	if (!note) {
+		location.assign('./index.html');
+	}
+
+	titleElement.value = note.title;
+	bodyElement.value = note.body;
+	dateElement.textContent = generateLastEdited(note.updatedAt);
+};
+
 // Generate last edited message
 const generateLastEdited = (timestamp) => {
 	return `Last edited: ${moment(timestamp).fromNow()}`;
 };
+
+export { generateNoteDOM, renderNotes, generateLastEdited, initializeEditPage };
