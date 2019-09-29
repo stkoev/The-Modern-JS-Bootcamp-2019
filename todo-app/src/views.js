@@ -1,38 +1,12 @@
-'use strict';
+import { getTodos, saveTodos, removeTodo, toggleTodo } from './todos';
+import { getFilters } from './filters';
 
-//Fetch existing todos from localStorage
-const getSavedTodos = () => {
-	const todosJSON = localStorage.getItem('todos');
-
-	try {
-		return todosJSON ? JSON.parse(todosJSON) : [];
-	} catch (e) {
-		return [];
-	}
-};
-
-//Save todos to local storage
-const saveTodos = (todos) => {
-	localStorage.setItem('todos', JSON.stringify(todos));
-};
-
-const removeTodo = (todoId) => {
-	const todoIndex = todos.findIndex((todo) => todo.id === todoId);
-	if (todoIndex > -1) {
-		todos.splice(todoIndex, 1);
-	}
-};
-
-// Toggle Completed on/off
-const toggleTodo = (id) => {
-	const todo = todos.find((todo) => todo.id === id);
-	if (todo) {
-		todo.completed = !todo.completed;
-	}
-};
-
-// Render application todos based on filters
-const renderTodos = (todos, filters) => {
+// renderTodos
+// Arguments: none
+// Return value: none
+const renderTodos = () => {
+	const filters = getFilters();
+	const todos = getTodos();
 	const filteredTodos = todos.filter((todo) => {
 		const searchTextMatch = todo.title.toLowerCase().includes(filters.searchText.toLowerCase());
 		const hideComletedMatch = !filters.hideCompleted || !todo.completed;
@@ -56,7 +30,9 @@ const renderTodos = (todos, filters) => {
 	}
 };
 
-// Get the DOM elements for an individual note
+// generateTodoDOM
+// Arguments: todo
+// Return value: the todo element
 const generateTodoDOM = (todo) => {
 	const todoEl = document.createElement('label');
 	const containerEl = document.createElement('div');
@@ -70,8 +46,7 @@ const generateTodoDOM = (todo) => {
 	containerEl.appendChild(checkbox);
 	checkbox.addEventListener('click', () => {
 		toggleTodo(todo.id);
-		saveTodos(todos);
-		renderTodos(todos, filters);
+		renderTodos();
 	});
 
 	// Setup the todo text
@@ -94,14 +69,15 @@ const generateTodoDOM = (todo) => {
 
 	removeButton.addEventListener('click', () => {
 		removeTodo(todo.id);
-		saveTodos(todos);
-		renderTodos(todos, filters);
+		renderTodos();
 	});
 
 	return todoEl;
 };
 
-//Get the DOM elements for tlist summary
+// generateSummaryDOM
+// Arguments: incompletedTodos
+// Return value: the summary element
 const generateSummaryDOM = (incompleteTodos) => {
 	const summary = document.createElement('h3');
 	summary.classList.add('list-title');
@@ -112,3 +88,6 @@ const generateSummaryDOM = (incompleteTodos) => {
 	}
 	return summary;
 };
+
+// Make sure to set up the exports
+export { renderTodos, generateTodoDOM, generateSummaryDOM };
